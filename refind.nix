@@ -8,28 +8,16 @@ let
 
   efi = config.boot.loader.efi;
 
-refindBuilder = pkgs.replaceVars {
-  src = ./refind-builder.py;
-  isExecutable = true;
-  python3 = toString pkgs.python3;
-  nix = toString config.nix.package.out;
-  timeout = if config.boot.loader.timeout != null then toString config.boot.loader.timeout else "";
-  extraConfig = cfg.extraConfig;
-  maxEntries = toString cfg.maxGenerations;
-  extraIcons = if cfg.extraIcons != null then toString cfg.extraIcons else "";
-  themes = toString cfg.themes;
-  refind = toString pkgs.refind;
-  efibootmgr = toString pkgs.efibootmgr;
-  coreutils = toString pkgs.coreutils;
-  gnugrep = toString pkgs.gnugrep;
-  gnused = toString pkgs.gnused;
-  gawk = toString pkgs.gawk;
-  utillinux = toString pkgs.utillinux;
-  gptfdisk = toString pkgs.gptfdisk;
-  findutils = toString pkgs.findutils;
-  efiSysMountPoint = efi.efiSysMountPoint;
-  canTouchEfiVariables = toString efi.canTouchEfiVariables;
-};
+refindBuilder = pkgs.writeShellScriptBin "install-refind" ''
+  ${pkgs.python3}/bin/python3 ${./refind-builder.py} \
+    --nix ${config.nix.package.out} \
+    --timeout ${if config.boot.loader.timeout != null then toString config.boot.loader.timeout else "20"} \
+    --max-entries ${toString cfg.maxGenerations} \
+    ${optionalString (cfg.extraIcons != null) "--extra-icons ${toString cfg.extraIcons}"} \
+    ${concatMapStringsSep " " (theme: "--theme ${toString theme}") cfg.themes} \
+    --efi-mount ${efi.efiSysMountPoint} \
+    ${if efi.canTouchEfiVariables then "--touch-vars" else ""}
+'';
 
 
 in {
