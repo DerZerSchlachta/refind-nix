@@ -8,29 +8,19 @@ let
 
   efi = config.boot.loader.efi;
 
-  refindBuilder = pkgs.replaceVars {
-    src = ./refind-builder.py;
-
-    isExecutable = true;
-
-    inherit (pkgs) python3;
-
-    nix = config.nix.package.out;
-
-    timeout = if config.boot.loader.timeout != null then config.boot.loader.timeout else "";
-
-    extraConfig = cfg.extraConfig;
-
-    maxEntries = cfg.maxGenerations;
-
-    extraIcons = if cfg.extraIcons != null then cfg.extraIcons else "";
-
-    themes = if cfg.themes != null then cfg.themes else "[]";
-
-    inherit (pkgs) refind efibootmgr coreutils gnugrep gnused gawk utillinux gptfdisk findutils;
-
-    inherit (efi) efiSysMountPoint canTouchEfiVariables;
-  };
+refindBuilder = pkgs.replaceVars {
+  src = ./refind-builder.py;
+  isExecutable = true;
+  inherit (pkgs) python3;
+  nix = config.nix.package.out;
+  timeout = if config.boot.loader.timeout != null then toString config.boot.loader.timeout else "";
+  extraConfig = cfg.extraConfig;
+  maxEntries = toString cfg.maxGenerations;
+  extraIcons = if cfg.extraIcons != null then toString cfg.extraIcons else "";
+  themes = toString cfg.themes;
+  inherit (pkgs) refind efibootmgr coreutils gnugrep gnused gawk utillinux gptfdisk findutils;
+  inherit (efi) efiSysMountPoint canTouchEfiVariables;
+} ();
 
 in {
 
