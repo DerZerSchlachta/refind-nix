@@ -20,7 +20,7 @@ refindBuilder = pkgs.replaceVars {
   themes = toString cfg.themes;
   inherit (pkgs) refind efibootmgr coreutils gnugrep gnused gawk utillinux gptfdisk findutils;
   inherit (efi) efiSysMountPoint canTouchEfiVariables;
-} ();
+};
 
 in {
 
