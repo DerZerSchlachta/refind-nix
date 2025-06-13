@@ -8,7 +8,7 @@ let
 
   efi = config.boot.loader.efi;
 
-  refindBuilder = pkgs.substituteAll {
+  refindBuilder = pkgs.replaceVars {
     src = ./refind-builder.py;
 
     isExecutable = true;
