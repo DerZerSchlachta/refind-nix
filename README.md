@@ -99,7 +99,7 @@ This is a NixOS module to install and configure the rEFInd bootloader completely
     boot.loader = {
         efi = {
             efiSysMountPoint = "/boot/efi";
-            cantouchEfiVariables = true;
+            canTouchEfiVariables = true;
         };
         refind = {
             enable = true;
@@ -108,7 +108,7 @@ This is a NixOS module to install and configure the rEFInd bootloader completely
     };
 }
 ```
-`boot.loader.efi.cantouchEfiVariables` must be enabled for refind to install correctly with `boot.loader.efi.efiSysMountPoint` correctly pointing to the esp mount point.
+`boot.loader.efi.canTouchEfiVariables` must be enabled for refind to install correctly with `boot.loader.efi.efiSysMountPoint` correctly pointing to the esp mount point.
 
 ## Credits
 [betaboon](https://github.com/betaboon) made the original nixos-module for rEFInd on his [gist](https://gist.github.com/betaboon/97abed457de8be43f89e7ca49d33d58d) which is the base for this module. Most of this codebase is his code but updated to work on latest nixpkgs-unstable
