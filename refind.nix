@@ -11,16 +11,26 @@ let
 refindBuilder = pkgs.replaceVars {
   src = ./refind-builder.py;
   isExecutable = true;
-  inherit (pkgs) python3;
-  nix = config.nix.package.out;
+  python3 = toString pkgs.python3;
+  nix = toString config.nix.package.out;
   timeout = if config.boot.loader.timeout != null then toString config.boot.loader.timeout else "";
   extraConfig = cfg.extraConfig;
   maxEntries = toString cfg.maxGenerations;
   extraIcons = if cfg.extraIcons != null then toString cfg.extraIcons else "";
   themes = toString cfg.themes;
-  inherit (pkgs) refind efibootmgr coreutils gnugrep gnused gawk utillinux gptfdisk findutils;
-  inherit (efi) efiSysMountPoint canTouchEfiVariables;
+  refind = toString pkgs.refind;
+  efibootmgr = toString pkgs.efibootmgr;
+  coreutils = toString pkgs.coreutils;
+  gnugrep = toString pkgs.gnugrep;
+  gnused = toString pkgs.gnused;
+  gawk = toString pkgs.gawk;
+  utillinux = toString pkgs.utillinux;
+  gptfdisk = toString pkgs.gptfdisk;
+  findutils = toString pkgs.findutils;
+  efiSysMountPoint = efi.efiSysMountPoint;
+  canTouchEfiVariables = toString efi.canTouchEfiVariables;
 };
+
 
 in {
 
